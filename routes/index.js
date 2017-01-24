@@ -36,7 +36,7 @@ router.post('/auth/signup', function(req, res, next) {
     return knex('user').where('email', req.body.email).first()
     .then(function(user) {
       if(!user) {
-        bcrypt.hash('req.body.password', 8)
+        bcrypt.hash(req.body.password, 8)
         .then(function(hash) {
           var user = {
             email: req.body.email,

@@ -11,6 +11,12 @@ router.get('/aliens', (req, res, next) => {
 
 });
 
+router.get('/aliens/:id', function (req, res, next) {
+  knex('probe').where('id', req.params.id).returning('*').then((data)=>{
+    res.json(data)
+  })
+})
+
 router.post('/aliens', (req, res, next) => {
     knex('probe')
     .insert({

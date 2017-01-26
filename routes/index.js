@@ -3,6 +3,43 @@ var router = express.Router();
 var bcrypt = require('bcrypt');
 var knex = require('../db/knex');
 
+router.get('/aliens', (req, res, next) => {
+    return knex('probe')
+    .then(probes =>{
+      res.json(probes)
+    })
+
+});
+
+router.post('/aliens', (req, res, next) => {
+    knex('probe')
+    .insert({
+      type: req.body.type,
+      placement: req.body.placement,
+      lights: req.body.lights,
+      user_id: 1
+    }).returning('*').then(probe=>{
+      res.json(probe)
+    })
+});
+
+router.delete('/aliens/:id', function (req, res, next) {
+  knex('probe').where('id', req.params.id).del().returning('*').then((data)=>{
+    res.json(data)
+  })
+})
+
+router.put('/aliens/edit/:id', (req, res) =>{
+    knex('probe').where('id', req.params.id).update({
+        type: req.body.type,
+        placement: req.body.placement,
+        lights: req.body.lights,
+        user_id: 1
+    }).returning('*').then((data)=>{
+      res.json(data)
+    })
+})
+
 function validUser(user) {
   var validEmail = typeof user.email == 'string' &&
                     user.email.trim() != '';
